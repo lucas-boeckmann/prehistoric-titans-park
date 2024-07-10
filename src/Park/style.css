@@ -1,0 +1,266 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton+SC&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Anton SC", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+    background-color: #136d15;
+    display: flex;
+    flex-direction: column;
+}
+
+i {
+    font-size: 300%;
+    color: rgba(245, 245, 245, 0.700);
+    transition: all 0.3s;
+}
+
+p {
+    font-size: 150%;
+    color: rgba(245, 245, 245, 0.700);
+}
+
+img {
+    image-rendering: pixelated;
+}
+
+button {
+    image-rendering: pixelated;
+}
+
+i:hover {
+    font-size: 400%;
+}
+
+#SideBar {
+    position: absolute;
+    height: 100vh;
+    width: 2.5%;
+    z-index: 1000;
+}
+
+#researchBtn {
+    padding-top: 400px;
+}
+
+#rWait {
+    font-size: 250%;
+}
+
+#waiting {
+    display: none;
+    font-size: 250%;
+}
+
+#waiting.enabled {
+    display: block;
+}
+
+.selectMenu {
+    display: none;
+    width: 600px;
+    height: 170px;
+    margin-top: 120px;
+    background-color: rgba(97, 114, 133, 0.4);
+}
+
+#sMenu.enabled {
+    display: block;
+}
+
+#researchWindow.enabled {
+    display: block;
+}
+
+#fenceMenu.enabled {
+    display: block;
+    width: 800px;
+}
+
+.sBtn {
+    width: 160px;
+    height: 160px;
+    border: 2px solid  rgba(90, 125, 167, 0.6);
+    background-color: rgba(69, 91, 116, 0.6);
+    background-repeat: no-repeat no-repeat;
+    background-size: cover;
+    border-radius: 3px;
+    margin: 5px;
+    transition: .5s all;
+
+}
+
+.sBtn:hover {
+    border: 2px solid  rgba(224, 224, 224, 0.6);
+}
+
+.sBtn.disabled {
+    display: none;
+}
+
+#fenceMenu Button {
+    width: 80px;
+    height: 80px;
+}
+
+#fenceBtn {
+    background-image: url('../img/cerca.png');
+}
+
+#dirtPathBtn {
+    background-image: url('../img/Estrada\ de\ terra.png');
+}
+
+#pathBtn {
+    background-image: url('../img/Estrada\ asfaltada.png');
+}
+
+#dinoBtn {
+    background-image: url("../img/dinos/dino-1.png");
+}
+
+#bigDinoBtn {
+    background-image: url("../img/dinos/big-dino-1.png");
+}
+
+#spinoBtn {
+    background-image: url("../img/dinos/spino-1.png");
+}
+
+#herbDinoBtn {
+    background-image: url("../img/dinos/herb-dino-1.png");
+}
+
+#saurDinoBtn {
+    background-image: url("../img/dinos/saur-dino-1.png");
+}
+
+#trikeBtn {
+    background-image: url("../img/dinos/trike-1.png");
+}
+
+.btn button {
+    background-color: transparent;
+    background-size: contain;
+    border: none;
+    padding: 1px;
+    width: 80px;
+    height: 80px;
+}
+
+#contentContainer {
+    flex-grow: 1;
+    height: 100vw;
+    overflow: auto;
+    position: relative;
+    max-height: 100vh;
+}
+
+#contentGrid {
+    height: 8000px;
+    width: 8000px;
+    display: grid;
+    grid-template-columns: repeat(20, 400px);
+    grid-template-rows: repeat(20, 400px);
+    gap: 1px;
+    position: relative;
+}
+
+#contentGrid.enabled::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 400%;
+    height: 400%;
+    background-image: linear-gradient(to right, black 1px, transparent 1px),
+                      linear-gradient(to bottom, black 1px, transparent 1px);
+    background-size: 100px 100px;
+    pointer-events: none;
+}
+
+.content {
+    width: 200vh;
+    height: 200vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.content img {
+    cursor: pointer;
+    object-fit: cover;
+    position: absolute;
+}
+
+.animal {
+    position: absolute;
+    transform-origin: center;
+    transform: translate(-50%, -50%);
+    animation: move 35s infinite linear;
+}
+
+@keyframes move {
+    0% {
+        top: 100px;
+        left: 100px;
+    }
+    15% {
+        top: 120px;
+        left: 150px;
+    }
+    20% {
+        top: 140px;
+        left: 140px;
+    }
+    25% {
+        top: 120px;
+        left: 200px;
+    }
+    30% {
+        top: 120px;
+        left: 260px;
+    }
+    35% {
+        top: 200px;
+        left: 180px;
+    }
+    50% {
+        top: 250px;
+        left: 200px;
+    }
+    60% {
+        top: 180px;
+        left: 160px;
+    }
+    65% {
+        top: 260px;
+        left: 250px;
+    }
+    75% {
+        top: 200px;
+        left: 180px;
+    }
+    85% {
+        top: 260px;
+        left: 160px;
+    }
+    90% {
+        top: 180px;
+        left: 120px;
+    }
+    100% {
+        top: 100px;
+        left: 100px;
+    }
+}
+
+@media (max-height: 1079px) {
+    .selectMenu {
+        top: 400px;
+    }
+}
