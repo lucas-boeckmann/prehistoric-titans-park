@@ -9,14 +9,14 @@
 }
 
 body {
-    background-color: #136d15;
+    image-rendering: pixelated;
     display: flex;
     flex-direction: column;
 }
 
 i {
     font-size: 300%;
-    color: rgba(245, 245, 245, 0.700);
+    color: rgba(212, 212, 212, 0.85);
     transition: all 0.3s;
 }
 
@@ -35,6 +35,11 @@ button {
 
 i:hover {
     font-size: 400%;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
 }
 
 #SideBar {
@@ -69,11 +74,23 @@ i:hover {
     background-color: rgba(97, 114, 133, 0.4);
 }
 
+.selectMenu i {
+    font-size: 160px;
+}
+
+.selectMenu i .enabled {
+    font-size: 200px;
+}
+
 #sMenu.enabled {
     display: block;
 }
 
 #researchWindow.enabled {
+    display: block;
+}
+
+#terraformWindow.enabled {
     display: block;
 }
 
@@ -112,12 +129,12 @@ i:hover {
     background-image: url('../img/cerca.png');
 }
 
-#dirtPathBtn {
-    background-image: url('../img/Estrada\ de\ terra.png');
+#fence1ABtn {
+    background-image: url('../img/cerca-1A.png');
 }
 
-#pathBtn {
-    background-image: url('../img/Estrada\ asfaltada.png');
+#fence2ABtn {
+    background-image: url('../img/cerca-2A.png');
 }
 
 #dinoBtn {
@@ -155,20 +172,22 @@ i:hover {
 
 #contentContainer {
     flex-grow: 1;
-    height: 100vw;
+    height: auto;
     overflow: auto;
     position: relative;
     max-height: 100vh;
 }
 
 #contentGrid {
-    height: 8000px;
-    width: 8000px;
+    height: 16000px;
+    width: 16000px;
     display: grid;
-    grid-template-columns: repeat(20, 400px);
-    grid-template-rows: repeat(20, 400px);
+    grid-template-columns: repeat(20, 800px);
+    grid-template-rows: repeat(20, 800px);
     gap: 1px;
     position: relative;
+    background-image: url(../img/natureza/solo.png);
+    background-size: 120px;
 }
 
 #contentGrid.enabled::before {
@@ -176,11 +195,11 @@ i:hover {
     position: absolute;
     top: 0;
     left: 0;
-    width: 400%;
-    height: 400%;
-    background-image: linear-gradient(to right, black 1px, transparent 1px),
-                      linear-gradient(to bottom, black 1px, transparent 1px);
-    background-size: 100px 100px;
+    width: 800%;
+    height: 800%;
+    background-image: linear-gradient(to right, black 2px, transparent 1px),
+                      linear-gradient(to bottom, black 2px, transparent 1px);
+    background-size: 800px 800px;
     pointer-events: none;
 }
 
@@ -204,22 +223,48 @@ i:hover {
     animation: move 35s infinite linear;
 }
 
+.visitor {
+    position: absolute;
+    transform-origin: center;
+    transform: translate(-50%, -50%);
+    animation: visitorMov 50s infinite linear;
+}
+
+.visitor2 {
+    position: absolute;
+    transform-origin: center;
+    transform: translate(-50%, -50%);
+    animation: visitorMov2 50s infinite linear;
+}
+
 @keyframes move {
     0% {
-        top: 100px;
-        left: 100px;
+        top: 120px;
+        left: 120px;
     }
     15% {
         top: 120px;
         left: 150px;
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
     }
     20% {
         top: 140px;
         left: 140px;
+        -moz-transform: scaleX(1);
+        -o-transform: scaleX(1);
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1);
     }
     25% {
         top: 120px;
         left: 200px;
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
     }
     30% {
         top: 120px;
@@ -228,22 +273,42 @@ i:hover {
     35% {
         top: 200px;
         left: 180px;
+        -moz-transform: scaleX(1);
+        -o-transform: scaleX(1);
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1);
     }
     50% {
         top: 250px;
         left: 200px;
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
     }
     60% {
         top: 180px;
         left: 160px;
+        -moz-transform: scaleX(1);
+        -o-transform: scaleX(1);
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1);
     }
     65% {
         top: 260px;
         left: 250px;
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
     }
     75% {
         top: 200px;
         left: 180px;
+        -moz-transform: scaleX(1);
+        -o-transform: scaleX(1);
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1);
     }
     85% {
         top: 260px;
@@ -254,8 +319,54 @@ i:hover {
         left: 120px;
     }
     100% {
-        top: 100px;
-        left: 100px;
+        top: 120px;
+        left: 120px;
+    }
+}
+
+@keyframes visitorMov {
+    0% {
+        left: 20px;
+        top: 10px;
+    } 
+    50% {
+        left: 200px;
+        top: 20px;
+    }
+    75% {
+        left: 300px;
+        top: 40px;
+    }
+    90% {
+        left: 150px;
+        top: 10px;
+    }
+    100% {
+        left: 20px;
+        top: 10px;
+    }
+}
+
+@keyframes visitorMov2 {
+    0% {
+        left: 20px;
+        top: 400px;
+    } 
+    50% {
+        left: 200px;
+        top: 410px;
+    }
+    75% {
+        left: 300px;
+        top: 430px;
+    }
+    90% {
+        left: 150px;
+        top: 400px;
+    }
+    100% {
+        left: 20px;
+        top: 400px;
     }
 }
 

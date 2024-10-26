@@ -1,19 +1,24 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", (e) => {
     const moneyLabel = document.getElementById("money")
     const researchBtn = document.getElementById("researchBtn")
     const atractionsButton = document.getElementById("atractions")
+    const terraformButton = document.getElementById("terraforming")
     const demolishButton = document.getElementById("demolish")
 
     const selectMenu = document.getElementById("sMenu")
     const researchWindow = document.getElementById("researchWindow")
+    const terraformWindow = document.getElementById("terraformWindow")
     const fenceMenu = document.getElementById("fenceMenu")
 
     const waitTxt = document.getElementById("waiting")
     const rWait = document.getElementById("rWait")
 
     const fenceBtn = document.getElementById("fenceBtn")
-    const dirtPathBtn = document.getElementById("dirtPathBtn")
-    const pathBtn = document.getElementById("pathBtn")
+    const fence1ABtn = document.getElementById("fence1ABtn")
+    const fence2ABtn = document.getElementById("fence2ABtn")
+
+    const minusBtn = document.getElementById("minusBtn")
+    const plusBtn = document.getElementById("plusBtn")
 
     const dinoBtn = document.getElementById("dinoBtn")
     const bigDinoBtn = document.getElementById("bigDinoBtn")
@@ -30,28 +35,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let researchEnabled = false
     let { spawnX, spawnY } = false
+    let terraformX = 1
+    let terraformY = 1
 
     moneyLabel.textContent = "$" + money
 
     let selectMode = false
     let researchMode = false
     let dinoSelectorMode = false
-    let decorateMode = false
+    let terraformMode = false
+    let demolishMode = false
 
     let putFenceMode = false
-    let putDirtPathMode = false
-    let putPathMode = false
-    let demolishMode = false
+    let putFence1AMode = false
+    let putFence2AMode = false
+
+    let terraformMinus = true
+    let terraformPlus = false
+
+    terraformMap()
 
     atractionsButton.addEventListener("click", () => {
         selectMode =! selectMode
         putFenceMode = false
+        terraformMode = false
         demolishMode = false
         researchMode = false
         dinoSelectorMode = false
         selectMenu.classList.toggle("enabled", selectMode)
         content.classList.toggle("enabled", selectMode)
         fenceMenu.classList.remove("enabled")
+        terraformWindow.classList.remove("enabled")
         researchWindow.classList.remove("enabled")
 
     })
@@ -61,16 +75,18 @@ document.addEventListener("DOMContentLoaded", () => {
         putFenceMode = false
         selectMode = false
         researchMode = false
+        terraformMode = false
         content.classList.toggle("enabled", demolishMode)
         fenceMenu.classList.remove("enabled")
         selectMenu.classList.remove("enabled")
+        terraformWindow.classList.remove("enabled")
         researchWindow.classList.remove("enabled")
     })
 
     researchBtn.addEventListener("click", () => {
         if (researchLevel >= 6) {
             rWait.innerHTML = "All animals were researched"
-        } if (selectMode || demolishMode || decorateMode) {
+        } if (selectMode || demolishMode || terraformMode) {
             return
         } else if (researchEnabled) {
             researchMode =! researchMode
@@ -81,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
             researchEnabled = true
             putFenceMode = false
             demolishMode = false
+            terraformMode = false
             dinoSelectorMode = false
             fenceMenu.classList.remove("enabled")
             research()
@@ -91,22 +108,49 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 
+    terraformButton.addEventListener("click", () => {
+        terraformMode =! terraformMode
+        selectMode = false
+        demolishMode = false
+        researchMode = false
+        terraformWindow.classList.toggle("enabled", terraformMode)
+        content.classList.toggle("enabled", terraformMode)
+        fenceMenu.classList.remove("enabled")
+        selectMenu.classList.remove("enabled")
+        content.classList.remove("enabled")
+        researchWindow.classList.remove("enabled")
+    })
+
     fenceBtn.addEventListener("click", () => {
         putFenceMode =! putFenceMode
-        putDirtPathMode = false
-        putPathMode = false
+        putFence1AMode = false
+        putFence2AMode = false
     })
 
-    dirtPathBtn.addEventListener("click", () => {
-        putDirtPathMode =! putDirtPathMode
+    fence1ABtn.addEventListener("click", () => {
+        putFence1AMode =! putFence1AMode
         putFenceMode = false
-        putPathMode = false
+        putFence2AMode = false
     })
 
-    pathBtn.addEventListener("click", () => {
-        putPathMode =! putPathMode
-        putDirtPathMode = false
+    fence2ABtn.addEventListener("click", () => {
+        putFence2AMode =! putFence2AMode
+        putFence1AMode = false
         putFenceMode = false
+    })
+
+    minusBtn.addEventListener("click", () => {
+        terraformMinus =! terraformMinus
+        terraformPlus = false
+        minusBtn.classList.toggle("enabled", terraformMinus)
+        plusBtn.classList.remove("enabled")
+    })
+
+    plusBtn.addEventListener("click", () => {
+        terraformPlus =! terraformPlus
+        terraformMinus = false
+        plusBtn.classList.toggle("enabled", terraformPlus)
+        minusBtn.classList.remove("enabled")
     })
 
     dinoBtn.addEventListener("click", () => {
@@ -175,49 +219,52 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 4000)
     })
 
-    content.addEventListener("click", (event) => {
+    content.addEventListener("click", (event) => {        
             const rect = content.getBoundingClientRect();
             const offsetX = event.clientX - rect.left;
             const offsetY = event.clientY - rect.top;
-            const cellX = Math.floor(offsetX / 400) + 1;
-            const cellY = Math.floor(offsetY / 400) + 1;
+            const cellX = Math.floor(offsetX / 800) + 1;
+            const cellY = Math.floor(offsetY / 800) + 1;
 
-            const existingImage = Array.from(content.children).find(img => {
+            const existingImages = Array.from(content.children).find(img => {
                 const imgX = parseInt(img.style.gridColumnStart, 10)
                 const imgY = parseInt(img.style.gridRowStart, 10)
     
                 return ( imgX === cellX && imgY === cellY )
             })
 
+            console.log(cellX)
+
             setupEvent(event)
 
-            if (existingImage) {
-                if (demolishMode) {
-                    destroyElement(existingImage, 5000)
-                } if (selectMode || decorateMode) {
-                    return
-                } else {
-                    dinoSelectorMode = true
-                    putFenceMode = false
-                    researchMode = false
-                    fenceMenu.classList.toggle("enabled", dinoSelectorMode)
-                    selectMenu.classList.remove("enabled")
-                    researchWindow.classList.remove("enabled")
-                    spawnX = cellX
-                    spawnY = cellY
-                }
+            if (dinoSelectorMode == false && selectMode == false && demolishMode == false ) {
+                dinoSelectorMode = true
+                putFenceMode = false
+                fenceMenu.classList.toggle("enabled", dinoSelectorMode)
+                selectMenu.classList.remove("enabled")
+                researchWindow.classList.remove("enabled")
+                spawnX = cellX
+                spawnY = cellY
             } else {
+                dinoSelectorMode = false
                 fenceMenu.classList.remove("enabled")
             }
-            if (selectMode) {
+
+            if (existingImages) {
+                if (demolishMode) {
+                    destroyElement(existingImages, 5000)
+                } 
+            } else if (selectMode) {
                 if (putFenceMode) {
-                    createElement("fence", "../img/cerca.png", "400px", 90000)
-                } else if (putDirtPathMode) {
-                    createElement("dirthPath", "../img/Estrada\ de\ terra.png", "100px", 400)
-                } else if (putPathMode) {
-                    createElement("path", "../img/Estrada\ asfaltada.png", "100px", 1000)
+                    createElement("fence", "../img/cerca.png", "800px", 90000)
+                    terraformArea()
+                } else if (putFence1AMode) {
+                    createElement("fence1A", "../img/cerca-1A.png", "800px", 67500)
+                } else if (putFence2AMode) {
+                    createElement("fence2A", "../img/cerca-2A.png", "800px", 45000)
                 }
             }
+
     })
     const step = 20
     document.addEventListener('keydown', (event) => {
@@ -245,14 +292,99 @@ document.addEventListener("DOMContentLoaded", () => {
     function createElement(elementClass, src, size, cost) {
             
         const rect = content.getBoundingClientRect();
-        const cellX = Math.floor((event.clientX - rect.left) / 400) + 1;
-        const cellY = Math.floor((event.clientY - rect.top) / 400) + 1;
+        const cellX = Math.floor((event.clientX - rect.left) / 800) + 1;
+        const cellY = Math.floor((event.clientY - rect.top) / 800) + 1;
     
         const element = document.createElement('img')
         element.classList.add(elementClass)
         element.src = src
         element.style.height = size
         element.style.width = size
+        element.style.gridColumnStart = cellX
+        element.style.gridRowStart = cellY
+        element.style.zIndex = "800"
+        content.appendChild(element)
+    
+        money -= cost
+        moneyLabel.textContent = "$" + money
+    }
+
+    function terraformMap() {
+        for (let i = 0; i < 20; i++) {
+            for (let e = 0; e < 20; e++) {
+                terraformArea("tg")
+                terraformY++
+            }
+            terraformX++
+            terraformY = 1
+        }
+    }
+
+    function terraformArea(type) {
+        let plantNumber = 0
+        let numberOfCycles =  0
+
+        if (type == "tg") {
+            plantNumber = Math.floor(Math.random() * 5) + 1
+            if (plantNumber == 5) {
+                numberOfCycles = Math.floor(Math.random() * 6) + 1
+            } else {
+                numberOfCycles = Math.floor(Math.random() * 18) + 4
+            }
+            plantNumber = Math.floor(Math.random() * 8) + 1
+            if (plantNumber == 8) {
+                terraform("../img/natureza/Lago.png", "300px", 2000, type)
+            }
+        } else if (terraformMinus) {
+            numberOfCycles = Math.floor(Math.random() * 5) + 1
+            terraform("../img/natureza/Lago.png", "300px", 2000, type)
+        } else if (terraformPlus) {
+            numberOfCycles = Math.floor(Math.random() * 12) + 1
+            terraform("../img/natureza/Lago.png", "300px", 2000, type)
+        }
+        for (let i = 0; i < numberOfCycles; i++) {
+            plantNumber = Math.floor(Math.random() * 3) + 1
+            terraform(`../img/natureza/Arvore-${plantNumber}.png`, "120px", 100, type)
+            plantNumber = Math.floor(Math.random() * 2) + 1
+            terraform(`../img/natureza/Arbusto-${plantNumber}.png`, "80px", 100, type)
+        }
+    }
+
+    function terraform(src, size, cost, type) {
+        if (money <= 0) {
+            return
+        }
+        let {cellX, cellY} = 0
+        let {pTop, pLeft} = 0
+
+        if (type == "tg") {
+            cellX = terraformX
+            cellY = terraformY
+            pTop = Math.floor(Math.random() * 740) + 1
+            pLeft = Math.floor(Math.random() * 740) + 1
+        } else {
+            const rect = content.getBoundingClientRect();
+            cellX = Math.floor((event.clientX - rect.left) / 800) + 1;
+            cellY = Math.floor((event.clientY - rect.top) / 800) + 1;
+            pTop = Math.floor(Math.random() * 480) + 70
+            pLeft = Math.floor(Math.random() * 480) + 70
+        }
+    
+        const element = document.createElement('img')
+        element.classList.add("nature")
+        element.src = src
+        element.style.height = size
+        element.style.width = size
+        element.style.top = pTop + "px"
+        element.style.left = pLeft + "px"
+        element.style.margin = "20px"
+        if (src == "../img/natureza/Lago.png") {
+            element.style.zIndex = 1
+        } else if (src = "../img/natureza/Arbusto-1" || src == "..img/natureza/Arbusto-2") {
+            element.style.zIndex = pTop - 60
+        } else {
+            element.style.zIndex = pTop
+        }
         element.style.gridColumnStart = cellX
         element.style.gridRowStart = cellY
         content.appendChild(element)
@@ -263,11 +395,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function createDinosaur(type, size, cost) {
-
-        const rect = content.getBoundingClientRect();
-        const cellX = Math.floor((event.clientX - rect.left) / 400) + 1;
-        const cellY = Math.floor((event.clientY - rect.top) / 400) + 1;
-    
+        if (money <= 0) {
+            return
+        }
         const dino = document.createElement('img')
         dino.classList.add("animal")
         content.appendChild(dino)
@@ -295,6 +425,7 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
                 delayEnd()
                 waitTxt.innerText = "..."
+                waitTxt.style.padding = "20px"
                 return
             }, 2500)
         }
@@ -302,6 +433,7 @@ document.addEventListener("DOMContentLoaded", () => {
         dino.style.width = size
         dino.style.gridColumnStart = spawnX
         dino.style.gridRowStart = spawnY
+        dino.style.zIndex = "2"
         dino.style.left = "150px"
         dino.style.top = "150px"
     
